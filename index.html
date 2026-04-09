@@ -8,7 +8,7 @@
 <style>
 body{margin:0;font-family:Arial,sans-serif;background:#f4f6f8;}
 header{background:#2e7d32;color:white;text-align:center;padding:30px;}
-.container{max-width:800px;margin:30px auto;background:white;padding:30px;border-radius:10px;box-shadow:0 0 15px rgba(0,0,0,0.1);}
+.container{max-width:800px;margin:30px auto;background:white;padding:30px;border-radius:10px;box-shadow:0 0 15px rgba(0,0,0,0.1);} 
 h2{color:#2e7d32;}
 form{display:flex;flex-direction:column;}
 label{margin-top:15px;font-weight:bold;}
@@ -19,7 +19,6 @@ button:hover{background:#1b5e20;}
 .success{background:#e8f5e9;color:#2e7d32;padding:15px;margin-top:20px;border-radius:8px;display:none;}
 small{color:#555;}
 
-/* GDPR checkbox styling */
 label.gdpr-label{
     display: flex;
     align-items: center;
@@ -43,7 +42,7 @@ Application for Special Šarplaninac Show</h1>
 <div class="container">
 
 <form id="prijavaForm"
-action="https://tajazgur.app.n8n.cloud/webhook/Prijave na specialno razstavo za šarplanince"
+action="https://tajazgur.app.n8n.cloud/webhook-test/Prijave na specialno razstavo za šarplanince"
 method="POST"
 enctype="multipart/form-data">
 
@@ -136,7 +135,6 @@ enctype="multipart/form-data">
 <input type="file" name="rodovnik" accept="image/*,.pdf" required>
 <small>Max 5MB</small>
 
-<!-- Champion Certificate polje -->
 <div id="championField" style="display:none;">
 <label>Potrdilo o šampionatu / Champion Title Certificate <span class="required">*</span></label>
 <input type="file" name="champion_certificate" accept="image/*,.pdf">
@@ -146,11 +144,24 @@ enctype="multipart/form-data">
 <label>Opombe / Notes</label>
 <textarea rows="4" name="opombe"></textarea>
 
-<!-- GDPR checkbox -->
 <label class="gdpr-label">
   <input type="checkbox" name="gdpr" value="Da" required>
   Soglašam z obdelavo osebnih podatkov / I agree to data processing <span class="required">*</span>
 </label>
+
+<!-- PLAČILO -->
+<div style="margin-top:25px; text-align:center; padding:20px; background:#fff3e0; border-radius:10px;">
+  <h3 style="margin:0; color:#e65100;">💳 Prijavnina / Entry Fee</h3>
+  <p style="font-size:20px; margin:10px 0;"><strong>35 €</strong></p>
+  
+  <!-- QR KODA ZA PLAČILO -->
+  <img src="/Users/tajazgur/Downloads/89a09adf4e724dacb8f29a0b831efa37.png" alt="QR za plačilo" style="width:180px; margin-top:10px;">
+  
+  <p style="margin-top:10px; font-size:13px; color:#555;">
+    Skeniraj QR za plačilo, nato oddaj prijavo<br>
+    Scan QR to pay, then submit the form
+  </p>
+</div>
 
 <button type="submit">Oddaj prijavo / Submit Application</button>
 
@@ -162,19 +173,16 @@ enctype="multipart/form-data">
 </div>
 
 <script>
-// Submit form
 document.getElementById("prijavaForm").addEventListener("submit", function(event){
   event.preventDefault();
   const form = event.target;
 
-  // Preveri GDPR
   const gdpr = form.querySelector('input[name="gdpr"]');
   if(!gdpr.checked){
     alert("Prosimo, da se strinjate z obdelavo osebnih podatkov / Please agree to data processing");
     return;
   }
 
-  // Če je razred Champion, preveri, če je datoteka priložena
   const razred = form.querySelector('select[name="razred"]').value;
   const champFile = form.querySelector('input[name="champion_certificate"]');
   if(razred === "Prvaki / Champions" && !champFile.value){
@@ -188,13 +196,12 @@ document.getElementById("prijavaForm").addEventListener("submit", function(event
   }).then(()=>{
     document.getElementById("successMessage").style.display="block";
     form.reset();
-    document.getElementById("championField").style.display = "none"; // skrij polje po resetu
+    document.getElementById("championField").style.display = "none";
   }).catch(()=>{
     alert("Prišlo je do napake / An error occurred");
   });
 });
 
-// Pokaži/skrij Champion Certificate polje glede na razred
 const razredSelect = document.querySelector('select[name="razred"]');
 const championField = document.getElementById("championField");
 
